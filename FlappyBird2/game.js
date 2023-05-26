@@ -1,16 +1,15 @@
-// SELECT CVS
 const cvs = document.getElementById("bird");
 const ctx = cvs.getContext("2d");
 
-// GAME VARS AND CONSTS
+// Переменные
 let frames = 0;
 const DEGREE = Math.PI/180;
 
-// LOAD SPRITE IMAGE
+// Спрайты
 const sprite = new Image();
 sprite.src = "img/sprite.png";
 
-// LOAD SOUNDS
+// Звуки
 const SCORE_S = new Audio();
 SCORE_S.src = "audio/sfx_point.wav";
 
@@ -26,7 +25,7 @@ SWOOSHING.src = "audio/sfx_swooshing.wav";
 const DIE = new Audio();
 DIE.src = "audio/sfx_die.wav";
 
-// GAME STATE
+// Счет
 const state = {
     current : 0,
     getReady : 0,
@@ -34,7 +33,7 @@ const state = {
     over : 2
 }
 
-// START BUTTON COORD
+// Кнопка старт
 const startBtn = {
     x : 120,
     y : 263,
@@ -42,7 +41,7 @@ const startBtn = {
     h : 29
 }
 
-// CONTROL THE GAME
+// Управление
 cvs.addEventListener("click", function(evt){
     switch(state.current){
         case state.getReady:
@@ -59,7 +58,7 @@ cvs.addEventListener("click", function(evt){
             let clickX = evt.clientX - rect.left;
             let clickY = evt.clientY - rect.top;
             
-            // CHECK IF WE CLICK ON THE START BUTTON
+            // Клик по кнопке старт
             if(clickX >= startBtn.x && clickX <= startBtn.x + startBtn.w && clickY >= startBtn.y && clickY <= startBtn.y + startBtn.h){
                 pipes.reset();
                 bird.speedReset();
@@ -72,7 +71,7 @@ cvs.addEventListener("click", function(evt){
 });
 
 
-// BACKGROUND
+// Бэкграунд
 const bg = {
     sX : 0,
     sY : 0,
@@ -89,7 +88,7 @@ const bg = {
     
 }
 
-// FOREGROUND
+// Fg
 const fg = {
     sX: 276,
     sY: 0,
@@ -113,7 +112,7 @@ const fg = {
     }
 }
 
-// BIRD
+// Bird
 const bird = {
     animation : [
         {sX: 276, sY : 112},
@@ -151,15 +150,15 @@ const bird = {
     },
     
     update: function(){
-        // IF THE GAME STATE IS GET READY STATE, THE BIRD MUST FLAP SLOWLY
+        // Get ready
         this.period = state.current == state.getReady ? 10 : 5;
-        // WE INCREMENT THE FRAME BY 1, EACH PERIOD
+        // Увеличение кадра на 1
         this.frame += frames%this.period == 0 ? 1 : 0;
-        // FRAME GOES FROM 0 To 4, THEN AGAIN TO 0
+        // кадры от 0 до 4 и опять 0
         this.frame = this.frame%this.animation.length;
         
         if(state.current == state.getReady){
-            this.y = 150; // RESET POSITION OF THE BIRD AFTER GAME OVER
+            this.y = 150; // сброс после проойгрыша
             this.rotation = 0 * DEGREE;
         }else{
             this.speed += this.gravity;
@@ -173,7 +172,7 @@ const bird = {
                 }
             }
             
-            // IF THE SPEED IS GREATER THAN THE JUMP MEANS THE BIRD IS FALLING DOWN
+            // больше чем приыжок, падает вниз
             if(this.speed >= this.jump){
                 this.rotation = 90 * DEGREE;
                 this.frame = 1;
@@ -188,7 +187,7 @@ const bird = {
     }
 }
 
-// GET READY MESSAGE
+// GET READY сообщение
 const getReady = {
     sX : 0,
     sY : 228,
@@ -205,7 +204,7 @@ const getReady = {
     
 }
 
-// GAME OVER MESSAGE
+// GAME OVER сообщение
 const gameOver = {
     sX : 175,
     sY : 228,
@@ -222,7 +221,7 @@ const gameOver = {
     
 }
 
-// PIPES
+// трубы
 const pipes = {
     position : [],
     
@@ -248,10 +247,10 @@ const pipes = {
             let topYPos = p.y;
             let bottomYPos = p.y + this.h + this.gap;
             
-            // top pipe
+            // верхняя труба
             ctx.drawImage(sprite, this.top.sX, this.top.sY, this.w, this.h, p.x, topYPos, this.w, this.h);  
             
-            // bottom pipe
+            // нижняя труба
             ctx.drawImage(sprite, this.bottom.sX, this.bottom.sY, this.w, this.h, p.x, bottomYPos, this.w, this.h);  
         }
     },
@@ -270,22 +269,21 @@ const pipes = {
             
             let bottomPipeYPos = p.y + this.h + this.gap;
             
-            // COLLISION DETECTION
-            // TOP PIPE
+           
             if(bird.x + bird.radius > p.x && bird.x - bird.radius < p.x + this.w && bird.y + bird.radius > p.y && bird.y - bird.radius < p.y + this.h){
                 state.current = state.over;
                 HIT.play();
             }
-            // BOTTOM PIPE
+           
             if(bird.x + bird.radius > p.x && bird.x - bird.radius < p.x + this.w && bird.y + bird.radius > bottomPipeYPos && bird.y - bird.radius < bottomPipeYPos + this.h){
                 state.current = state.over;
                 HIT.play();
             }
             
-            // MOVE THE PIPES TO THE LEFT
+            // Движение труб влево
             p.x -= this.dx;
             
-            // if the pipes go beyond canvas, we delete them from the array
+        
             if(p.x + this.w <= 0){
                 this.position.shift();
                 score.value += 1;
@@ -302,7 +300,7 @@ const pipes = {
     
 }
 
-// SCORE
+// Очки
 const score= {
     best : parseInt(localStorage.getItem("best")) || 0,
     value : 0,
@@ -318,11 +316,11 @@ const score= {
             ctx.strokeText(this.value, cvs.width/2, 50);
             
         }else if(state.current == state.over){
-            // SCORE VALUE
+           
             ctx.font = "25px Teko";
             ctx.fillText(this.value, 225, 186);
             ctx.strokeText(this.value, 225, 186);
-            // BEST SCORE
+            // Лучший счет
             ctx.fillText(this.best, 225, 228);
             ctx.strokeText(this.best, 225, 228);
         }
@@ -333,7 +331,7 @@ const score= {
     }
 }
 
-// DRAW
+
 function draw(){
     ctx.fillStyle = "#70c5ce";
     ctx.fillRect(0, 0, cvs.width, cvs.height);
@@ -347,14 +345,14 @@ function draw(){
     score.draw();
 }
 
-// UPDATE
+
 function update(){
     bird.update();
     fg.update();
     pipes.update();
 }
 
-// LOOP
+
 function loop(){
     update();
     draw();
