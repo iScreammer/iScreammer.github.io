@@ -1,11 +1,18 @@
 const cvs = document.getElementById("bird");
 const ctx = cvs.getContext("2d");
 
+<<<<<<< HEAD
 // Переменные
 let frames = 0;
 const DEGREE = Math.PI/180;
 
 // Спрайты
+=======
+let frames = 0;
+const DEGREE = Math.PI/180;
+
+// Картинки
+>>>>>>> b658ee31c645f6c9bdd6f3535a1840a1493ada05
 const sprite = new Image();
 sprite.src = "img/sprite.png";
 
@@ -25,7 +32,10 @@ SWOOSHING.src = "audio/sfx_swooshing.wav";
 const DIE = new Audio();
 DIE.src = "audio/sfx_die.wav";
 
+<<<<<<< HEAD
 // Счет
+=======
+>>>>>>> b658ee31c645f6c9bdd6f3535a1840a1493ada05
 const state = {
     current : 0,
     getReady : 0,
@@ -33,7 +43,11 @@ const state = {
     over : 2
 }
 
+<<<<<<< HEAD
 // Кнопка старт
+=======
+// Кнопка Start
+>>>>>>> b658ee31c645f6c9bdd6f3535a1840a1493ada05
 const startBtn = {
     x : 120,
     y : 263,
@@ -58,7 +72,11 @@ cvs.addEventListener("click", function(evt){
             let clickX = evt.clientX - rect.left;
             let clickY = evt.clientY - rect.top;
             
+<<<<<<< HEAD
             // Клик по кнопке старт
+=======
+            // Нажимаем на кнопку пуск
+>>>>>>> b658ee31c645f6c9bdd6f3535a1840a1493ada05
             if(clickX >= startBtn.x && clickX <= startBtn.x + startBtn.w && clickY >= startBtn.y && clickY <= startBtn.y + startBtn.h){
                 pipes.reset();
                 bird.speedReset();
@@ -71,7 +89,11 @@ cvs.addEventListener("click", function(evt){
 });
 
 
+<<<<<<< HEAD
 // Бэкграунд
+=======
+// Background фон
+>>>>>>> b658ee31c645f6c9bdd6f3535a1840a1493ada05
 const bg = {
     sX : 0,
     sY : 0,
@@ -150,6 +172,7 @@ const bird = {
     },
     
     update: function(){
+<<<<<<< HEAD
         // Get ready
         this.period = state.current == state.getReady ? 10 : 5;
         // Увеличение кадра на 1
@@ -159,6 +182,17 @@ const bird = {
         
         if(state.current == state.getReady){
             this.y = 150; // сброс после проойгрыша
+=======
+        // Стартовый экран, птица машет крыльями
+        this.period = state.current == state.getReady ? 10 : 5;
+        // Увеличение кадра на 1
+        this.frame += frames%this.period == 0 ? 1 : 0;
+        // Кадр переходит от 0 к 4 и опять к 0
+        this.frame = this.frame%this.animation.length;
+        
+        if(state.current == state.getReady){
+            this.y = 150; // Рестарт после пройгрыша
+>>>>>>> b658ee31c645f6c9bdd6f3535a1840a1493ada05
             this.rotation = 0 * DEGREE;
         }else{
             this.speed += this.gravity;
@@ -172,7 +206,11 @@ const bird = {
                 }
             }
             
+<<<<<<< HEAD
             // больше чем приыжок, падает вниз
+=======
+            // Если скорость больше чем при прыжке, птица падает вниз
+>>>>>>> b658ee31c645f6c9bdd6f3535a1840a1493ada05
             if(this.speed >= this.jump){
                 this.rotation = 90 * DEGREE;
                 this.frame = 1;
@@ -187,7 +225,11 @@ const bird = {
     }
 }
 
+<<<<<<< HEAD
 // GET READY сообщение
+=======
+// Сообщение  Get ready
+>>>>>>> b658ee31c645f6c9bdd6f3535a1840a1493ada05
 const getReady = {
     sX : 0,
     sY : 228,
@@ -204,7 +246,11 @@ const getReady = {
     
 }
 
+<<<<<<< HEAD
 // GAME OVER сообщение
+=======
+// сообщение Game over
+>>>>>>> b658ee31c645f6c9bdd6f3535a1840a1493ada05
 const gameOver = {
     sX : 175,
     sY : 228,
@@ -221,7 +267,11 @@ const gameOver = {
     
 }
 
+<<<<<<< HEAD
 // трубы
+=======
+// Pipes трубы
+>>>>>>> b658ee31c645f6c9bdd6f3535a1840a1493ada05
 const pipes = {
     position : [],
     
@@ -269,21 +319,37 @@ const pipes = {
             
             let bottomPipeYPos = p.y + this.h + this.gap;
             
+<<<<<<< HEAD
            
+=======
+            // Столкновения
+            // Top pipe
+>>>>>>> b658ee31c645f6c9bdd6f3535a1840a1493ada05
             if(bird.x + bird.radius > p.x && bird.x - bird.radius < p.x + this.w && bird.y + bird.radius > p.y && bird.y - bird.radius < p.y + this.h){
                 state.current = state.over;
                 HIT.play();
             }
+<<<<<<< HEAD
            
+=======
+            // Bottom pipe
+>>>>>>> b658ee31c645f6c9bdd6f3535a1840a1493ada05
             if(bird.x + bird.radius > p.x && bird.x - bird.radius < p.x + this.w && bird.y + bird.radius > bottomPipeYPos && bird.y - bird.radius < bottomPipeYPos + this.h){
                 state.current = state.over;
                 HIT.play();
             }
             
+<<<<<<< HEAD
             // Движение труб влево
             p.x -= this.dx;
             
         
+=======
+            // Движение труб (в лево)
+            p.x -= this.dx;
+            
+            // каналы выходят за пределы canvas, удаляем их из массива
+>>>>>>> b658ee31c645f6c9bdd6f3535a1840a1493ada05
             if(p.x + this.w <= 0){
                 this.position.shift();
                 score.value += 1;
@@ -300,7 +366,11 @@ const pipes = {
     
 }
 
+<<<<<<< HEAD
 // Очки
+=======
+// Score
+>>>>>>> b658ee31c645f6c9bdd6f3535a1840a1493ada05
 const score= {
     best : parseInt(localStorage.getItem("best")) || 0,
     value : 0,
@@ -316,11 +386,19 @@ const score= {
             ctx.strokeText(this.value, cvs.width/2, 50);
             
         }else if(state.current == state.over){
+<<<<<<< HEAD
            
             ctx.font = "25px Teko";
             ctx.fillText(this.value, 225, 186);
             ctx.strokeText(this.value, 225, 186);
             // Лучший счет
+=======
+            // Шрифт score
+            ctx.font = "25px Teko";
+            ctx.fillText(this.value, 225, 186);
+            ctx.strokeText(this.value, 225, 186);
+            // Best score
+>>>>>>> b658ee31c645f6c9bdd6f3535a1840a1493ada05
             ctx.fillText(this.best, 225, 228);
             ctx.strokeText(this.best, 225, 228);
         }
@@ -331,7 +409,10 @@ const score= {
     }
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> b658ee31c645f6c9bdd6f3535a1840a1493ada05
 function draw(){
     ctx.fillStyle = "#70c5ce";
     ctx.fillRect(0, 0, cvs.width, cvs.height);
@@ -345,14 +426,20 @@ function draw(){
     score.draw();
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> b658ee31c645f6c9bdd6f3535a1840a1493ada05
 function update(){
     bird.update();
     fg.update();
     pipes.update();
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> b658ee31c645f6c9bdd6f3535a1840a1493ada05
 function loop(){
     update();
     draw();
