@@ -1,15 +1,14 @@
-
 const cvs = document.getElementById("bird");
 const ctx = cvs.getContext("2d");
-
 
 let frames = 0;
 const DEGREE = Math.PI/180;
 
+// Картинки
 const sprite = new Image();
 sprite.src = "img/sprite.png";
 
-
+// Звуки
 const SCORE_S = new Audio();
 SCORE_S.src = "audio/sfx_point.wav";
 
@@ -25,7 +24,6 @@ SWOOSHING.src = "audio/sfx_swooshing.wav";
 const DIE = new Audio();
 DIE.src = "audio/sfx_die.wav";
 
-// статистика
 const state = {
     current : 0,
     getReady : 0,
@@ -33,7 +31,7 @@ const state = {
     over : 2
 }
 
-// кнопка старт
+// Кнопка Start
 const startBtn = {
     x : 120,
     y : 263,
@@ -41,7 +39,7 @@ const startBtn = {
     h : 29
 }
 
-// управление
+// Управление
 cvs.addEventListener("click", function(evt){
     switch(state.current){
         case state.getReady:
@@ -58,7 +56,7 @@ cvs.addEventListener("click", function(evt){
             let clickX = evt.clientX - rect.left;
             let clickY = evt.clientY - rect.top;
             
-           
+            // Нажимаем на кнопку пуск
             if(clickX >= startBtn.x && clickX <= startBtn.x + startBtn.w && clickY >= startBtn.y && clickY <= startBtn.y + startBtn.h){
                 pipes.reset();
                 bird.speedReset();
@@ -71,7 +69,7 @@ cvs.addEventListener("click", function(evt){
 });
 
 
-// bg
+// Background фон
 const bg = {
     sX : 0,
     sY : 0,
@@ -88,7 +86,7 @@ const bg = {
     
 }
 
-// fg
+// Fg
 const fg = {
     sX: 276,
     sY: 0,
@@ -112,7 +110,7 @@ const fg = {
     }
 }
 
-// bird
+// Bird
 const bird = {
     animation : [
         {sX: 276, sY : 112},
@@ -150,15 +148,15 @@ const bird = {
     },
     
     update: function(){
-      
+        // Стартовый экран, птица машет крыльями
         this.period = state.current == state.getReady ? 10 : 5;
-       
+        // Увеличение кадра на 1
         this.frame += frames%this.period == 0 ? 1 : 0;
-      
+        // Кадр переходит от 0 к 4 и опять к 0
         this.frame = this.frame%this.animation.length;
         
         if(state.current == state.getReady){
-            this.y = 150; 
+            this.y = 150; // Рестарт после пройгрыша
             this.rotation = 0 * DEGREE;
         }else{
             this.speed += this.gravity;
@@ -172,7 +170,7 @@ const bird = {
                 }
             }
             
-            
+            // Если скорость больше чем при прыжке, птица падает вниз
             if(this.speed >= this.jump){
                 this.rotation = 90 * DEGREE;
                 this.frame = 1;
@@ -187,7 +185,7 @@ const bird = {
     }
 }
 
-
+// Сообщение  Get ready
 const getReady = {
     sX : 0,
     sY : 228,
@@ -204,7 +202,7 @@ const getReady = {
     
 }
 
-
+// сообщение Game over
 const gameOver = {
     sX : 175,
     sY : 228,
@@ -221,7 +219,7 @@ const gameOver = {
     
 }
 
-
+// Pipes трубы
 const pipes = {
     position : [],
     
@@ -247,10 +245,10 @@ const pipes = {
             let topYPos = p.y;
             let bottomYPos = p.y + this.h + this.gap;
             
-       
+            // top pipe
             ctx.drawImage(sprite, this.top.sX, this.top.sY, this.w, this.h, p.x, topYPos, this.w, this.h);  
             
-     
+            // bottom pipe
             ctx.drawImage(sprite, this.bottom.sX, this.bottom.sY, this.w, this.h, p.x, bottomYPos, this.w, this.h);  
         }
     },
@@ -269,22 +267,22 @@ const pipes = {
             
             let bottomPipeYPos = p.y + this.h + this.gap;
             
-          
-        
+            // Столкновения
+            // Top pipe
             if(bird.x + bird.radius > p.x && bird.x - bird.radius < p.x + this.w && bird.y + bird.radius > p.y && bird.y - bird.radius < p.y + this.h){
                 state.current = state.over;
                 HIT.play();
             }
-    
+            // Bottom pipe
             if(bird.x + bird.radius > p.x && bird.x - bird.radius < p.x + this.w && bird.y + bird.radius > bottomPipeYPos && bird.y - bird.radius < bottomPipeYPos + this.h){
                 state.current = state.over;
                 HIT.play();
             }
             
-          
+            // Движение труб (в лево)
             p.x -= this.dx;
             
-       
+            // каналы выходят за пределы canvas, удаляем их из массива
             if(p.x + this.w <= 0){
                 this.position.shift();
                 score.value += 1;
@@ -301,7 +299,7 @@ const pipes = {
     
 }
 
-
+// Score
 const score= {
     best : parseInt(localStorage.getItem("best")) || 0,
     value : 0,
@@ -317,10 +315,11 @@ const score= {
             ctx.strokeText(this.value, cvs.width/2, 50);
             
         }else if(state.current == state.over){
-    
+            // Шрифт score
             ctx.font = "25px Teko";
             ctx.fillText(this.value, 225, 186);
             ctx.strokeText(this.value, 225, 186);
+            // Best score
             ctx.fillText(this.best, 225, 228);
             ctx.strokeText(this.best, 225, 228);
         }
@@ -330,7 +329,6 @@ const score= {
         this.value = 0;
     }
 }
-
 
 function draw(){
     ctx.fillStyle = "#70c5ce";
@@ -345,13 +343,11 @@ function draw(){
     score.draw();
 }
 
-
 function update(){
     bird.update();
     fg.update();
     pipes.update();
 }
-
 
 function loop(){
     update();
