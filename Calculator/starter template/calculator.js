@@ -1,7 +1,3 @@
-/* ------------------------------ */
-/* -- Code Explained Tutorials -- */
-/* -  YouTube.com/CodeExplained - */
-/* ------------------------------ */
 let calculator_buttons = [
     {
         name : "delete",
